@@ -1,0 +1,323 @@
+{
+  "theme": "light",
+  "archetype": "THE PERFORMANCE PRO / INDUSTRIAL PRECISION (Hydro Industrial Brand)",
+  "language": "pt-BR",
+  "brand_identity": {
+    "name": "LCC Hydro Mining — Controle de Ciclo de Vida de Componentes",
+    "tone": "Industrial, robusto, preciso, corporativo, alta legibilidade e confiabilidade técnica para mineração de alta performance.",
+    "palette_source": "Norsk Hydro Brand Identity Guidelines (Hydro Blue #444D55, Hydro Light Blue #768692, Hydro Aluminium #8C8C8C, Mid Gray #757575, Light Gray #F4F4F4, Dark Slate Charcoal #1A2127)"
+  },
+  "colors": {
+    "surfaces": [
+      {
+        "name": "page",
+        "kind": "solid",
+        "bg": "#F4F4F4",
+        "on_bg": "#1A2127",
+        "on_bg_muted": "#5A656F",
+        "roles": {
+          "link": "#24323D",
+          "error": "#B91C1C",
+          "warning": "#B45309",
+          "success": "#15803D",
+          "info": "#1D4ED8",
+          "border": "#D2D7DC"
+        }
+      },
+      {
+        "name": "panel",
+        "kind": "solid",
+        "bg": "#FFFFFF",
+        "on_bg": "#1A2127",
+        "on_bg_muted": "#5A656F",
+        "roles": {
+          "link": "#24323D",
+          "error": "#B91C1C",
+          "warning": "#B45309",
+          "success": "#15803D",
+          "info": "#1D4ED8",
+          "border": "#E2E6EA"
+        }
+      },
+      {
+        "name": "sidebar",
+        "kind": "solid",
+        "bg": "#444D55",
+        "on_bg": "#FFFFFF",
+        "on_bg_muted": "#D2D7DC",
+        "roles": {
+          "active_bg": "#2F363C",
+          "active_text": "#FFFFFF",
+          "hover_bg": "#3B434A",
+          "hover_text": "#FFFFFF",
+          "border": "#55606A",
+          "badge_bg": "#768692",
+          "badge_text": "#FFFFFF"
+        }
+      },
+      {
+        "name": "header",
+        "kind": "solid",
+        "bg": "#FFFFFF",
+        "on_bg": "#1A2127",
+        "on_bg_muted": "#5A656F",
+        "roles": {
+          "border": "#E2E6EA",
+          "search_bg": "#F4F4F4",
+          "search_text": "#1A2127"
+        }
+      },
+      {
+        "name": "inverse",
+        "kind": "solid",
+        "bg": "#1A2127",
+        "on_bg": "#FFFFFF",
+        "on_bg_muted": "#BCC3CA",
+        "roles": {
+          "border": "#2D3740"
+        }
+      },
+      {
+        "name": "badge_normal",
+        "kind": "solid",
+        "bg": "#DCFCE7",
+        "on_bg": "#14532D",
+        "on_bg_muted": "#166534"
+      },
+      {
+        "name": "badge_atencao",
+        "kind": "solid",
+        "bg": "#FEF3C7",
+        "on_bg": "#78350F",
+        "on_bg_muted": "#92400E"
+      },
+      {
+        "name": "badge_atraso",
+        "kind": "solid",
+        "bg": "#FEE2E2",
+        "on_bg": "#7F1D1D",
+        "on_bg_muted": "#991B1B"
+      },
+      {
+        "name": "badge_inconsistencia",
+        "kind": "solid",
+        "bg": "#F3E8FF",
+        "on_bg": "#581C87",
+        "on_bg_muted": "#6B21A8"
+      },
+      {
+        "name": "badge_parcial",
+        "kind": "solid",
+        "bg": "#E0F2FE",
+        "on_bg": "#0C4A6E",
+        "on_bg_muted": "#0369A1"
+      }
+    ],
+    "accent": "#444D55",
+    "on_accent": "#FFFFFF",
+    "accent_secondary": "#768692",
+    "on_accent_secondary": "#FFFFFF",
+    "status_colors": {
+      "normal": {
+        "bg": "#DCFCE7",
+        "text": "#14532D",
+        "border": "#86EFAC",
+        "label": "Normal / Operacional"
+      },
+      "atencao": {
+        "bg": "#FEF3C7",
+        "text": "#78350F",
+        "border": "#FCD34D",
+        "label": "Atenção (>= 85% meta)"
+      },
+      "atraso": {
+        "bg": "#FEE2E2",
+        "text": "#7F1D1D",
+        "border": "#FCA5A5",
+        "label": "Atraso / Meta Excedida"
+      },
+      "inconsistencia": {
+        "bg": "#F3E8FF",
+        "text": "#581C87",
+        "border": "#D8B4FE",
+        "label": "Inconsistência de Horímetro"
+      }
+    }
+  },
+  "typography": {
+    "font_family_heading": "Outfit Variable, sans-serif",
+    "font_family_body": "IBM Plex Sans, sans-serif",
+    "font_family_mono": "IBM Plex Mono, monospace",
+    "import_line": "@import \"@fontsource-variable/outfit\";\n@import \"@fontsource/ibm-plex-sans\";\n@import \"@fontsource/ibm-plex-mono\";",
+    "scale_px": {
+      "display": 48,
+      "h1": 36,
+      "h2": 28,
+      "h3": 22,
+      "h4": 18,
+      "body": 15,
+      "caption": 13
+    },
+    "rules": [
+      "Títulos (H1, H2, H3) usam Outfit com peso font-semibold ou font-bold e tracking-tight.",
+      "Dados numéricos, horímetros, TAGs, códigos SAP e custos BRL usam IBM Plex Mono para alinhamento tabular perfeito.",
+      "Textos corridos, formulários, tabelas e labels usam IBM Plex Sans com tracking normal e leading-relaxed.",
+      "Indicadores de status SEMPRE acompanhados de texto explícito (nunca apenas bolinhas coloridas)."
+    ]
+  },
+  "entry_surfaces": {
+    "/login": "split branded login — painel industrial Hydro à esquerda com métricas operacionais da frota, formulário de autenticação e seleção de perfil à direita",
+    "/": "dashboard executivo industrial — barra superior com pesquisa global (TAG/PN/Série) e perfil ativo, sidebar com 10 menus em Norsk Hydro Blue, grid de KPIs e gráficos Recharts de vidas e custos LCC"
+  },
+  "navigation_structure": {
+    "sidebar_menus": [
+      {
+        "id": "dashboard",
+        "label": "Dashboard Gerencial",
+        "path": "/",
+        "icon": "LayoutDashboard",
+        "description": "Visão geral de frota, LCC, componentes críticos e horímetros"
+      },
+      {
+        "id": "equipamentos",
+        "label": "Equipamentos",
+        "path": "/equipamentos",
+        "icon": "Truck",
+        "description": "Máquinas pesadas (Caterpillar, SANY, Scania, Liebherr, John Deere)"
+      },
+      {
+        "id": "componentes",
+        "label": "Componentes",
+        "path": "/componentes",
+        "icon": "Boxes",
+        "description": "Cadastro e árvore de componentes com TAG, SAP e N° de Série"
+      },
+      {
+        "id": "instalacao-remocao",
+        "label": "Instalação e Remoção",
+        "path": "/instalacao-remocao",
+        "icon": "Wrench",
+        "description": "Trocas, horímetro na instalação/remoção e cálculo de horas operadas"
+      },
+      {
+        "id": "controle-vidas",
+        "label": "Controle de Vidas",
+        "path": "/controle-vidas",
+        "icon": "RotateCw",
+        "description": "Gestão de até 4 vidas por componente e metas por família"
+      },
+      {
+        "id": "reformas",
+        "label": "Reformas",
+        "path": "/reformas",
+        "icon": "Factory",
+        "description": "Reformas internas (oficina própria) e externas (fornecedores)"
+      },
+      {
+        "id": "lcc-custos",
+        "label": "LCC e Custos",
+        "path": "/lcc-custos",
+        "icon": "DollarSign",
+        "description": "Life Cycle Cost: custo acumulado, custo/hora (R$/h) e custo por vida com status parcial"
+      },
+      {
+        "id": "integracao-sap",
+        "label": "Integração SAP",
+        "path": "/integracao-sap",
+        "icon": "RefreshCw",
+        "description": "Monitor de sincronização de lotes, importados, rejeitados, duplicidades e reprocessamento"
+      },
+      {
+        "id": "relatorios",
+        "label": "Relatórios",
+        "path": "/relatorios",
+        "icon": "FileSpreadsheet",
+        "description": "Relatórios operacionais e analíticos com exportação Excel (.xlsx) e PDF"
+      },
+      {
+        "id": "administracao",
+        "label": "Administração",
+        "path": "/administracao",
+        "icon": "ShieldCheck",
+        "description": "Gestão de fabricantes, metas por família, perfis de acesso e trilha de auditoria"
+      }
+    ],
+    "user_profiles": [
+      { "id": "admin", "name": "Administrador", "badge": "Acesso Total", "color": "bg-slate-800 text-white" },
+      { "id": "pcm", "name": "PCM (Planejamento)", "badge": "Edição & Metas", "color": "bg-blue-700 text-white" },
+      { "id": "engenharia", "name": "Engenharia de Confiabilidade", "badge": "LCC & Análise", "color": "bg-emerald-700 text-white" },
+      { "id": "oficina", "name": "Oficina / Manutenção", "badge": "Trocas & Reformas", "color": "bg-amber-700 text-white" },
+      { "id": "gestor", "name": "Gestor de Operações", "badge": "Dashboard & Aprovações", "color": "bg-purple-700 text-white" },
+      { "id": "consulta", "name": "Consulta / Visualizador", "badge": "Somente Leitura", "color": "bg-gray-600 text-white" }
+    ]
+  },
+  "domain_rules_mining": {
+    "tags_distinction": {
+      "tag_equipamento": {
+        "example": "EQ-CAT-793D-014",
+        "format": "Prefixo EQ + Fabricante + Modelo + ID Frota",
+        "badge_style": "bg-[#444D55] text-white font-mono px-2 py-0.5 rounded text-xs font-semibold"
+      },
+      "tag_componente": {
+        "example": "CMP-MOT-3516B-088",
+        "format": "Prefixo CMP + Tipo (MOT/TRN/DIF/CIL) + Modelo + Serial Interno",
+        "badge_style": "bg-[#768692] text-white font-mono px-2 py-0.5 rounded text-xs font-semibold"
+      },
+      "codigo_sap_pn": {
+        "example": "SAP 40019283 / PN 245-1289",
+        "format": "Código do material SAP (8 dígitos) e Part Number original do fabricante",
+        "badge_style": "bg-[#F4F4F4] text-[#1A2127] border border-[#D2D7DC] font-mono px-2 py-0.5 rounded text-xs font-semibold"
+      }
+    },
+    "life_cycle_targets": {
+      "vida_1_nova": { "target_hours": 12000, "label": "1ª Vida (Novo)", "desc": "Meta nominal padrão 12.000 horas" },
+      "vida_2_reforma_1": { "target_hours": 10000, "label": "2ª Vida (1ª Reforma)", "desc": "Meta padrão 10.000 horas" },
+      "vida_3_reforma_2": { "target_hours": 8000, "label": "3ª Vida (2ª Reforma)", "desc": "Meta padrão 8.000 horas" },
+      "vida_4_reforma_3": { "target_hours": null, "label": "4ª Vida (Descarte/Especial)", "desc": "Meta customizável ou não definida (sucateamento)" }
+    },
+    "hourmeter_rules": {
+      "formula": "Horas Trabalhadas = Horímetro Remoção − Horímetro Instalação",
+      "validation": "Horímetro de remoção NÃO pode ser menor que o de instalação. Se negativo ou discrepante (>10% da média esperada), sinalizar 'Inconsistência de Horímetro'."
+    },
+    "lcc_rules": {
+      "formula_custo_hora": "Custo / Hora (R$/h) = Custo Acumulado Total (R$) ÷ Total Horas Trabalhadas",
+      "partial_flag": "Se o componente ainda está em operação na vida atual, exibir badge 'LCC Parcial' pois o custo total da vida ainda não encerrou."
+    }
+  },
+  "component_hierarchy": {
+    "layout_shell": "@/components/layout/AppShell.tsx",
+    "sidebar": "@/components/layout/Sidebar.tsx",
+    "topbar": "@/components/layout/TopNavbar.tsx",
+    "global_search": "@/components/search/GlobalQuickSearch.tsx",
+    "kpi_cards": "@/components/dashboard/KpiStatCard.tsx",
+    "hourmeter_calculator": "@/components/operations/HourmeterCalculator.tsx",
+    "life_progress_bar": "@/components/life/LifeProgressBar.tsx",
+    "sap_sync_monitor": "@/components/sap/SapSyncMonitor.tsx",
+    "audit_trail_table": "@/components/admin/AuditTrailTable.tsx",
+    "status_badge": "@/components/common/StatusBadge.tsx",
+    "export_actions": "@/components/common/ExportActions.tsx"
+  },
+  "motion_and_interactions": {
+    "page_transitions": "Fade-in suave (opacity 0 to 1, y: 6px to 0, duration 0.18s)",
+    "table_rows": "Hover suave bg-[#F4F4F4]/70, transição de borda em inputs",
+    "buttons": "Micro feedback em hover (brightness-105) e active (scale-[0.98])",
+    "modals": "Abertura com escala 0.98 -> 1.0 e blur de fundo sutil"
+  },
+  "accessibility": {
+    "test_id_convention": "kebab-case explícito em todos os botões, inputs, abas, filtros e linhas de tabela (ex: data-testid='btn-nova-instalacao', data-testid='input-tag-componente', data-testid='filter-status-atraso')",
+    "contrast_standard": "WCAG AA (mínimo 4.5:1 para todo texto). Fundo claro com Hydro Blue e texto grafite escuro #1A2127",
+    "status_rule": "Sempre associar ícone + texto de status + cor (não confiar apenas em cores para acessibilidade a daltônicos)"
+  },
+  "instructions_to_main_agent": [
+    "1. PALETA NORSK HYDRO: Aplicar estritamente o Hydro Blue (#444D55), Hydro Light Blue (#768692), Light Gray (#F4F4F4), White (#FFFFFF) e Dark Charcoal (#1A2127). O visual deve ser extremamente corporativo, limpo e industrial.",
+    "2. IDIOMA 100% PT-BR: Toda a interface, termos técnicos de mineração, mensagens de erro, cabeçalhos de tabela e relatórios devem estar em Português do Brasil com formatação brasileira (R$ e números com vírgula/ponto: 12.000 h, R$ 145.200,50).",
+    "3. DIFERENCIAÇÃO VISUAL CLARA DE TAGS: Toda visualização de equipamento e componente deve diferenciar claramente 'TAG Equipamento' (ex: EQ-CAT-793D-014), 'TAG Componente' (ex: CMP-MOT-3516B-088) e 'Código SAP / Part Number' (ex: SAP 40019283 / PN 245-1289) com estilos de badges distintos.",
+    "4. CÁLCULO DE HORÍMETRO EM TEMPO REAL: Nos formulários de Instalação e Remoção, calcular automaticamente a diferença de horas entre Horímetro Remoção e Horímetro Instalação com validação imediata de inconsistência caso horímetro final seja menor que inicial.",
+    "5. CONTROLE DE 4 VIDAS: Renderizar componentes com barra de progresso visual de vida (1ª Vida: 12.000h, 2ª Vida: 10.000h, 3ª Vida: 8.000h, 4ª Vida customizada/não definida) com indicadores de status explícitos: 'Normal', 'Atenção (>=85%)', 'Atraso / Meta Excedida' e 'Inconsistência'.",
+    "6. LCC E CUSTOS: Apresentar custos consolidados de aquisição, reformas e manutenção, custo por hora (R$/h) e indicador 'LCC Parcial' para vidas em andamento.",
+    "7. MONITOR DE INTEGRAÇÃO SAP: Aba com logs de lotes sincronizados, status de sucesso, itens rejeitados, detecção de duplicidades e botão para 'Reprocessar Lote Rejeitado'.",
+    "8. EXPORTAÇÃO DE RELATÓRIOS: Botões funcionais para download de relatórios em Excel (.xlsx gerado via openpyxl ou exportação de dados estruturados) e visualização de impressão/PDF.",
+    "9. PERFIS E AUDITORIA: Dropdown para simular troca rápida de perfil (Administrador, PCM, Engenharia, Oficina, Consulta, Gestor) e tela de Trilha de Auditoria com log de quem instalou, removeu, editou metas ou aprovou reformas.",
+    "10. DATA-TESTID: Incluir atributos data-testid em todos os elementos clicáveis, campos de formulário, botões de ação e tabelas para testes automatizados."
+  ]
+}
