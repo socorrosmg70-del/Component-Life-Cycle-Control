@@ -39,8 +39,19 @@ async def list_equipment(q: str | None = None, manufacturer: str | None = None, 
     return [Equipment(**e, installed_components=counts.get(e["id"], 0)) for e in eqs]
 
 
+TAG_RX = re.compile(r"^[A-Z]{2,3}-\d{3,5}$")
+
+
+def _norm_tag(body: EquipmentIn) -> None:
+    body.tag = body.tag.strip().upper()
+    if not TAG_RX.match(body.tag):
+        raise HTTPException(422, "TAG da máquina fora do padrão: use PREFIXO-NÚMERO, ex.: TE-8015 (trator de esteira), "
+                                 "CA-8014 (caminhão fora de estrada), ES-8003 (escavadeira), CR-8021 (caminhão rodoviário)")
+
+
 @router.post("/equipment", response_model=Equipment)
 async def create_equipment(body: EquipmentIn, user: dict = Depends(require("cadastro"))):
+    _norm_tag(body)
     await _uniq("equipment", "tag", body.tag, label="TAG de equipamento")
     await _uniq("equipment", "serial", body.serial, label="Nº de série de equipamento")
     if not await db.manufacturers.find_one({"name": body.manufacturer}):
@@ -56,6 +67,7 @@ async def update_equipment(eid: str, body: EquipmentIn, user: dict = Depends(req
     old = await db.equipment.find_one({"id": eid}, {"_id": 0})
     if not old:
         raise HTTPException(404, "Equipamento não encontrado")
+    _norm_tag(body)
     await _uniq("equipment", "tag", body.tag, eid, "TAG de equipamento")
     await _uniq("equipment", "serial", body.serial, eid, "Nº de série de equipamento")
     if body.hourmeter < float(old["hourmeter"]):

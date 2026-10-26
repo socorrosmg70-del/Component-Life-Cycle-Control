@@ -13,7 +13,7 @@ import { EmptyState, ExportButtons, Field, KpiCard, NSelect, PageHeader, Panel, 
 import type { Tone } from "@/components/common";
 
 const TEMPLATES: Record<string, string> = {
-  HORIMETROS: "equipment_tag;hourmeter;date\nEQ-CAT-793F-014;61250;2026-01-15\n",
+  HORIMETROS: "equipment_tag;hourmeter;date\nCA-8014;61250;2026-01-15\nTE-8015;38900;2026-01-15\n",
   CUSTOS_OM: "sap_om;component_tag;category;amount;date;cost_center;supplier;order_status;description\n4000801;CMP-MOT-3516E-001;MATERIAIS;1250,00;2026-01-10;CC-1101;Sotreq;ENTE;Filtros\n",
   MATERIAIS: "sap_code;description;pn\n40019283;MOTOR DIESEL CAT 3516E HD;245-1289\n",
 };

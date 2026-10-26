@@ -3,8 +3,8 @@ from fastapi import APIRouter, Depends, HTTPException, Response
 from lib.audit import audit, now_iso
 from lib.auth import COOKIE, ROLE_LABELS, current_user, hash_pw, make_token, permissions_for, require, verify_pw
 from lib.db import db
-from models.schemas import (AuditEntry, Family, FamilyIn, LoginIn, Manufacturer, ManufacturerIn, UserCreate, UserOut,
-                            UserPatch, new_id)
+from models.schemas import (AuditEntry, Family, FamilyIn, LoginIn, Manufacturer, ManufacturerIn, PasswordChangeIn,
+                            UserCreate, UserOut, UserPatch, new_id)
 
 router = APIRouter()
 
@@ -14,16 +14,46 @@ def user_out(u: dict) -> UserOut:
                    active=u.get("active", True), permissions=permissions_for(u["role"]))
 
 
+CONTROLLER_EMAIL = "controlador@hydro.com"
+VISITOR_EMAIL = "visitante@hydro.com"
+
+
+def _open_session(response: Response, u: dict) -> None:
+    response.set_cookie(COOKIE, make_token(u["id"]), httponly=True, samesite="lax", secure=True, max_age=12 * 3600, path="/")
+
+
 @router.post("/auth/login", response_model=UserOut)
 async def login(body: LoginIn, response: Response):
-    u = await db.users.find_one({"email": body.email.strip().lower()}, {"_id": 0})
-    if not u or not verify_pw(body.password, u["password_hash"]):
-        raise HTTPException(401, "E-mail ou senha inválidos")
+    """Controller login (password). Visitor has no password — see /auth/visitor."""
+    email = (body.email or CONTROLLER_EMAIL).strip().lower()
+    u = await db.users.find_one({"email": email}, {"_id": 0})
+    if not u or u["role"] != "controlador" or not verify_pw(body.password, u.get("password_hash") or ""):
+        raise HTTPException(401, "Senha inválida")
     if not u.get("active", True):
         raise HTTPException(403, "Usuário inativo")
-    response.set_cookie(COOKIE, make_token(u["id"]), httponly=True, samesite="lax", secure=True, max_age=12 * 3600, path="/")
-    await audit(u, "LOGIN", "usuario", u["id"], f"Login de {u['name']}")
+    _open_session(response, u)
+    await audit(u, "LOGIN", "usuario", u["id"], f"Login de {u['name']} (Controlador)")
     return user_out(u)
+
+
+@router.post("/auth/visitor", response_model=UserOut)
+async def visitor_login(response: Response):
+    """Read-only visitor session, no password."""
+    u = await db.users.find_one({"email": VISITOR_EMAIL, "role": "visitante"}, {"_id": 0})
+    if not u or not u.get("active", True):
+        raise HTTPException(403, "Acesso de visitante desativado")
+    _open_session(response, u)
+    return user_out(u)
+
+
+@router.post("/auth/change-password")
+async def change_password(body: PasswordChangeIn, user: dict = Depends(require("usuarios"))):
+    full = await db.users.find_one({"id": user["id"]}, {"_id": 0})
+    if not verify_pw(body.current_password, full.get("password_hash") or ""):
+        raise HTTPException(422, "Senha atual incorreta")
+    await db.users.update_one({"id": user["id"]}, {"$set": {"password_hash": hash_pw(body.new_password)}})
+    await audit(user, "ALTERACAO", "usuario", user["id"], "Senha do Controlador alterada")
+    return {"ok": True}
 
 
 @router.post("/auth/logout")
@@ -61,8 +91,8 @@ async def patch_user(uid: str, body: UserPatch, user: dict = Depends(require("us
     if not u:
         raise HTTPException(404, "Usuário não encontrado")
     upd = body.model_dump(exclude_none=True)
-    if uid == user["id"] and (upd.get("active") is False or upd.get("role", "admin") != "admin"):
-        raise HTTPException(409, "Não é possível remover o próprio acesso de administrador")
+    if uid == user["id"] and (upd.get("active") is False or upd.get("role", "controlador") != "controlador"):
+        raise HTTPException(409, "Não é possível remover o próprio acesso de Controlador")
     await db.users.update_one({"id": uid}, {"$set": upd})
     await audit(user, "ALTERACAO", "usuario", uid, f"Usuário {u['email']} alterado", before={k: u.get(k) for k in upd}, after=upd)
     return user_out({**u, **upd})

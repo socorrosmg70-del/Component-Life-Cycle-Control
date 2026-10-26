@@ -85,12 +85,8 @@ export const EQ_STATUS_LABEL: Record<string, string> = {
   INATIVO: "Inativo",
 };
 export const ROLE_LABEL: Record<string, string> = {
-  admin: "Administrador",
-  pcm: "PCM",
-  engenharia: "Engenharia / Confiabilidade",
-  oficina: "Oficina",
-  consulta: "Usuário de consulta",
-  gestor: "Gestor",
+  controlador: "Controlador de componentes",
+  visitante: "Visitante",
 };
 
 /** Build a query string from a filter object, skipping empty values. */

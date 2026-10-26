@@ -1,6 +1,6 @@
 // Hand-written mirrors of backend/models/schemas.py — keep in sync.
 
-export type Role = "admin" | "pcm" | "engenharia" | "oficina" | "consulta" | "gestor";
+export type Role = "controlador" | "visitante";
 export type Perm =
   | "cadastro" | "movimentacao" | "validar_vida" | "reforma" | "concluir_reforma" | "custos"
   | "sap" | "metas" | "correcao" | "usuarios" | "auditoria";
@@ -9,6 +9,7 @@ export interface UserOut {
   id: string; name: string; email: string; role: Role; role_label: string; active: boolean; permissions: Perm[];
 }
 export interface UserCreate { name: string; email: string; password: string; role: Role }
+export interface PasswordChangeIn { current_password: string; new_password: string }
 
 export interface Manufacturer { id: string; name: string; active: boolean; created_at: string | null }
 export interface FamilyIn {

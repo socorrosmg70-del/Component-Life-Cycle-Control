@@ -12,8 +12,13 @@ def new_id() -> str:
 
 # ---------- auth / users ----------
 class LoginIn(BaseModel):
-    email: str
+    email: Optional[str] = None  # omitted → default component-controller account
     password: str
+
+
+class PasswordChangeIn(BaseModel):
+    current_password: str
+    new_password: str = Field(min_length=6)
 
 
 class UserOut(BaseModel):
@@ -30,11 +35,11 @@ class UserCreate(BaseModel):
     name: str = Field(min_length=2)
     email: str = Field(min_length=5)
     password: str = Field(min_length=6)
-    role: Literal["admin", "pcm", "engenharia", "oficina", "consulta", "gestor"]
+    role: Literal["controlador", "visitante"]
 
 
 class UserPatch(BaseModel):
-    role: Optional[Literal["admin", "pcm", "engenharia", "oficina", "consulta", "gestor"]] = None
+    role: Optional[Literal["controlador", "visitante"]] = None
     active: Optional[bool] = None
 
 

@@ -13,28 +13,16 @@ SECRET = os.environ.get("JWT_SECRET", "lcc-hydro-dev-secret-change-in-prod")
 COOKIE = "lcc_session"
 
 ROLE_LABELS = {
-    "admin": "Administrador",
-    "pcm": "PCM",
-    "engenharia": "Engenharia / Confiabilidade",
-    "oficina": "Oficina",
-    "consulta": "Usuário de consulta",
-    "gestor": "Gestor",
+    "controlador": "Controlador de componentes",
+    "visitante": "Visitante",
 }
 
-# permission -> roles allowed. Read access is open to every authenticated role.
-PERMS: dict[str, set[str]] = {
-    "cadastro": {"admin", "pcm"},
-    "movimentacao": {"admin", "pcm", "oficina"},
-    "validar_vida": {"admin", "engenharia"},
-    "reforma": {"admin", "pcm", "oficina"},
-    "concluir_reforma": {"admin", "oficina", "engenharia"},
-    "custos": {"admin", "pcm", "engenharia"},
-    "sap": {"admin", "pcm"},
-    "metas": {"admin"},
-    "correcao": {"admin", "pcm"},
-    "usuarios": {"admin"},
-    "auditoria": {"admin", "gestor", "engenharia"},
-}
+# permission -> roles allowed. Read access is open to every authenticated role;
+# every write/edit belongs to the component controller only.
+PERMS: dict[str, set[str]] = {p: {"controlador"} for p in (
+    "cadastro", "movimentacao", "validar_vida", "reforma", "concluir_reforma", "custos", "sap", "metas",
+    "correcao", "usuarios", "auditoria",
+)}
 
 
 def permissions_for(role: str) -> list[str]:
@@ -66,7 +54,7 @@ async def current_user(request: Request) -> dict:
     except jwt.PyJWTError:
         raise HTTPException(401, "Sessão expirada")
     user = await db.users.find_one({"id": payload["sub"]}, {"_id": 0, "password_hash": 0})
-    if not user or not user.get("active", True):
+    if not user or not user.get("active", True) or user.get("role") not in ROLE_LABELS:
         raise HTTPException(401, "Usuário inativo")
     return user
 

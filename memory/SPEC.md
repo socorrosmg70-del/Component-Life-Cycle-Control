@@ -8,10 +8,11 @@ Hydro brand palette (#444D55 / #768692 / #F4F4F4), fonts Outfit + IBM Plex Sans/
 FastAPI (/api, backend/routers/*) + MongoDB (motor) + React/Vite. Business writes in `backend/lib/services.py`
 (install, remove, validate_life, create/update/conclude reform), read computations in `backend/lib/domain.py`
 (summarize, lives_of, lcc_of). Pydantic models `backend/models/schemas.py` ↔ TS `frontend/src/lib/types.ts`.
-Auth: JWT httpOnly cookie, `lib/auth.py` PERMS matrix (read open to all logged roles).
+Auth: JWT httpOnly cookie. Only 2 roles: `controlador` (password login, ALL write permissions) and `visitante`
+(POST /api/auth/visitor, no password, read-only). PERMS in `lib/auth.py`.
 
 ## Data model (collections)
-users, manufacturers, families (targets[4], 4th may be null = "não definida", attention_pct 85), equipment (tag unique,
+users (controlador, visitante), manufacturers, families (targets[4], 4th may be null = "não definida", attention_pct 85), equipment (tag unique, pattern PREFIX-NNNN e.g. TE-8015 trator de esteira, CA caminhão, ES escavadeira, CR rodoviário; enforced on create/update,
 hourmeter, hourmeter_updated_at), components (tag unique, serial unique, sap_code, pn, current_life 1..4, status
 LIBERADO|INSTALADO|REMOVIDO|AGUARDANDO_REFORMA|REFORMA_INTERNA|REFORMA_EXTERNA|SUCATEADO, acquisition_cost, source),
 movements (one doc per installation, ABERTA→ENCERRADA, hours_worked, early_removal, inconsistencies, revisions[]),
@@ -32,7 +33,7 @@ cost_entries (category, life_number, source MANUAL|SAP), sap_batches, sap_keys (
 - Corrections: POST /movements/{id}/correct keeps revisions; no hard deletes anywhere.
 
 ## Seed (python seed.py — resets data; relative to today)
-11 components, 6 equipment. Key: CMP-MOT-3516E-001 = 4 lives (transfers 793F-014↔015, 3rd life early, 4th life in progress,
+12 components, 7 equipment (CA-8014, CA-8015, ES-8003, ES-8007, CR-8021, TE-8002, TE-8015 = CAT D11 with CMP-CFN-D11-012). Key: CMP-MOT-3516E-001 = 4 lives (transfers CA-8014↔CA-8015, 3rd life early, 4th life in progress,
 no target); CMP-TRN-793F-002 Atenção; CMP-DIF-793F-003 2nd life above target; CMP-CIL-R9200-004 external reform overdue;
 CMP-CIL-R9200-005 internal reform in execution; CMP-CFN-SY750-006 awaiting reform; CMP-MOT-DC13-007 normal;
 CMP-TRN-850K-008 new, no serial / no acquisition cost; CMP-MOT-D9512-009 LIBERADO, validation pending, reform without cost;

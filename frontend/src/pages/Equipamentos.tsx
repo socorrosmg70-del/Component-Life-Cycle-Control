@@ -87,7 +87,7 @@ export default function Equipamentos() {
           <DialogHeader><DialogTitle>{edit?.id ? "Editar equipamento" : "Novo equipamento"}</DialogTitle></DialogHeader>
           {edit && (
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <Field label="TAG do equipamento" required><Input data-testid="equipment-form-tag" value={edit.form.tag} onChange={(e) => upd("tag")(e.target.value)} placeholder="EQ-CAT-793F-016" className="font-mono" /></Field>
+              <Field label="TAG da máquina" required hint="Padrão PREFIXO-NÚMERO: TE trator de esteira · CA caminhão · ES escavadeira · CR rodoviário"><Input data-testid="equipment-form-tag" value={edit.form.tag} onChange={(e) => upd("tag")(e.target.value)} placeholder="TE-8015" className="font-mono uppercase" /></Field>
               <Field label="Fabricante" required hint="Novos fabricantes: Administração"><NSelect testid="equipment-form-manufacturer" value={edit.form.manufacturer} onChange={upd("manufacturer")}><option value="">Selecione…</option>{mans?.map((m) => <option key={m.id}>{m.name}</option>)}</NSelect></Field>
               <Field label="Modelo" required><Input data-testid="equipment-form-model" value={edit.form.model} onChange={(e) => upd("model")(e.target.value)} /></Field>
               <Field label="Nº de série"><Input data-testid="equipment-form-serial" value={edit.form.serial ?? ""} onChange={(e) => upd("serial")(e.target.value)} className="font-mono" /></Field>

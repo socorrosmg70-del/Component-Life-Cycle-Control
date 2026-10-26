@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Plus, Save } from "lucide-react";
 import { toast } from "sonner";
-import { apiGet, apiPatch, apiPost, apiPut } from "@/lib/api";
+import { apiGet, apiPost, apiPut } from "@/lib/api";
 import { useCan } from "@/lib/auth";
 import { ROLE_LABEL, errMsg, fmtDateTime, qs } from "@/lib/format";
 import { useFamilies, useManufacturers, useRefreshAll } from "@/lib/queries";
-import type { AuditEntry, Family, FamilyIn, Manufacturer, Role, UserCreate, UserOut } from "@/lib/types";
+import type { AuditEntry, Family, FamilyIn, Manufacturer, PasswordChangeIn, Role } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -16,12 +16,8 @@ import { EmptyState, Field, NSelect, PageHeader, Panel, Pill } from "@/component
 const PERM_LABEL: [string, string][] = [["cadastro", "Cadastro de equipamentos e componentes"], ["movimentacao", "Instalação, remoção e horímetro"], ["validar_vida", "Validação de vidas"], ["reforma", "Abertura/atualização de reformas"],
   ["concluir_reforma", "Inspeção e liberação de reformas"], ["custos", "Lançamento de custos"], ["sap", "Importação e reprocessamento SAP"], ["metas", "Fabricantes e metas por família"],
   ["correcao", "Correções rastreáveis"], ["usuarios", "Gestão de usuários"], ["auditoria", "Trilha de auditoria"]];
-const MATRIX: Record<string, Role[]> = {
-  cadastro: ["admin", "pcm"], movimentacao: ["admin", "pcm", "oficina"], validar_vida: ["admin", "engenharia"], reforma: ["admin", "pcm", "oficina"],
-  concluir_reforma: ["admin", "oficina", "engenharia"], custos: ["admin", "pcm", "engenharia"], sap: ["admin", "pcm"], metas: ["admin"], correcao: ["admin", "pcm"],
-  usuarios: ["admin"], auditoria: ["admin", "gestor", "engenharia"],
-};
-const ROLES: Role[] = ["admin", "pcm", "engenharia", "oficina", "gestor", "consulta"];
+const MATRIX: Record<string, Role[]> = Object.fromEntries(PERM_LABEL.map(([k]) => [k, ["controlador"] as Role[]]));
+const ROLES: Role[] = ["controlador", "visitante"];
 
 function FamilyRow({ f, editable }: { f: Family; editable: boolean }) {
   const refresh = useRefreshAll();
@@ -52,14 +48,16 @@ export default function Admin() {
   const { data: fams } = useFamilies();
   const [mName, setMName] = useState("");
   const [fam, setFam] = useState({ name: "", component_type: "" });
-  const [nu, setNu] = useState<UserCreate>({ name: "", email: "", password: "", role: "consulta" });
+  const [pw, setPw] = useState<PasswordChangeIn & { confirm: string }>({ current_password: "", new_password: "", confirm: "" });
   const [aq, setAq] = useState({ q: "", entity: "" });
-  const users = useQuery({ queryKey: ["users"], enabled: can("usuarios"), queryFn: () => apiGet<UserOut[]>("/users") });
   const audit = useQuery({ queryKey: ["audit", qs(aq)], enabled: can("auditoria"), queryFn: () => apiGet<AuditEntry[]>(`/audit${qs(aq)}`) });
   const addM = useMutation({ mutationFn: () => apiPost<Manufacturer>("/manufacturers", { name: mName }), onSuccess: (m) => { toast.success(`Fabricante ${m.name} cadastrado`); setMName(""); refresh(); }, onError: (e) => toast.error(errMsg(e)) });
   const addF = useMutation({ mutationFn: () => apiPost<Family>("/families", { ...fam, targets: [12000, 10000, 8000, null], attention_pct: 85, notes: null }), onSuccess: () => { toast.success("Família criada com metas de referência"); setFam({ name: "", component_type: "" }); refresh(); }, onError: (e) => toast.error(errMsg(e)) });
-  const addU = useMutation({ mutationFn: () => apiPost<UserOut>("/users", nu), onSuccess: (u) => { toast.success(`Usuário ${u.email} criado`); setNu({ name: "", email: "", password: "", role: "consulta" }); refresh(); }, onError: (e) => toast.error(errMsg(e)) });
-  const patchU = useMutation({ mutationFn: (p: { id: string; body: { role?: Role; active?: boolean } }) => apiPatch<UserOut>(`/users/${p.id}`, p.body), onSuccess: () => { toast.success("Usuário atualizado"); refresh(); }, onError: (e) => toast.error(errMsg(e)) });
+  const changePw = useMutation({
+    mutationFn: () => apiPost<{ ok: boolean }>("/auth/change-password", { current_password: pw.current_password, new_password: pw.new_password } satisfies PasswordChangeIn),
+    onSuccess: () => { toast.success("Senha do Controlador alterada"); setPw({ current_password: "", new_password: "", confirm: "" }); },
+    onError: (e) => toast.error(errMsg(e)),
+  });
 
   return (
     <div>
@@ -108,26 +106,16 @@ export default function Admin() {
                 </TableBody>
               </Table>
             </Panel>
-            <Panel title="Usuários">
-              {!can("usuarios") ? <EmptyState>Gestão de usuários restrita ao Administrador.</EmptyState> : (
-                <>
-                  <Table>
-                    <TableBody>{users.data?.map((u) => (
-                      <TableRow key={u.id} data-testid={`user-row-${u.email}`}>
-                        <TableCell><div className="text-[13px] font-medium">{u.name}</div><div className="font-mono text-[11px] text-steel">{u.email}</div></TableCell>
-                        <TableCell><NSelect testid={`user-role-${u.email}`} value={u.role} onChange={(v) => patchU.mutate({ id: u.id, body: { role: v as Role } })} className="h-8 w-44 text-[12px]">{ROLES.map((r) => <option key={r} value={r}>{ROLE_LABEL[r]}</option>)}</NSelect></TableCell>
-                        <TableCell><button type="button" data-testid={`user-active-${u.email}`} onClick={() => patchU.mutate({ id: u.id, body: { active: !u.active } })}><Pill tone={u.active ? "normal" : "neutral"}>{u.active ? "Ativo" : "Inativo"}</Pill></button></TableCell>
-                      </TableRow>
-                    ))}</TableBody>
-                  </Table>
-                  <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                    <Input data-testid="user-new-name" placeholder="Nome" value={nu.name} onChange={(e) => setNu({ ...nu, name: e.target.value })} className="h-9" />
-                    <Input data-testid="user-new-email" placeholder="E-mail" value={nu.email} onChange={(e) => setNu({ ...nu, email: e.target.value })} className="h-9" />
-                    <Input data-testid="user-new-password" type="password" placeholder="Senha (mín. 6)" value={nu.password} onChange={(e) => setNu({ ...nu, password: e.target.value })} className="h-9" />
-                    <NSelect testid="user-new-role" value={nu.role} onChange={(v) => setNu({ ...nu, role: v as Role })}>{ROLES.map((r) => <option key={r} value={r}>{ROLE_LABEL[r]}</option>)}</NSelect>
-                    <Button data-testid="user-new-submit" onClick={() => addU.mutate()} disabled={addU.isPending} className="bg-hydro text-white hover:bg-hydro-dark sm:col-span-2"><Plus className="size-4" />Criar usuário</Button>
-                  </div>
-                </>
+            <Panel title="Senha do Controlador">
+              {!can("usuarios") ? <EmptyState>Somente o Controlador de componentes pode alterar a senha de acesso.</EmptyState> : (
+                <div className="grid gap-3">
+                  <p className="text-[12.5px] text-steel">O Visitante entra sem senha e apenas consulta. Toda edição exige o acesso do Controlador.</p>
+                  <Field label="Senha atual" required><Input data-testid="pw-current" type="password" value={pw.current_password} onChange={(e) => setPw({ ...pw, current_password: e.target.value })} className="h-9" /></Field>
+                  <Field label="Nova senha (mín. 6)" required><Input data-testid="pw-new" type="password" value={pw.new_password} onChange={(e) => setPw({ ...pw, new_password: e.target.value })} className="h-9" /></Field>
+                  <Field label="Confirmar nova senha" required><Input data-testid="pw-confirm" type="password" value={pw.confirm} onChange={(e) => setPw({ ...pw, confirm: e.target.value })} className="h-9" /></Field>
+                  {pw.confirm && pw.confirm !== pw.new_password && <Pill tone="inconsistencia">As senhas não conferem</Pill>}
+                  <Button data-testid="pw-submit" disabled={changePw.isPending || pw.new_password.length < 6 || pw.confirm !== pw.new_password} onClick={() => changePw.mutate()} className="bg-hydro text-white hover:bg-hydro-dark">Alterar senha</Button>
+                </div>
               )}
             </Panel>
           </div>
