@@ -22,6 +22,7 @@ export default function Login() {
       <section className="relative hidden min-h-screen overflow-hidden bg-hydro text-white lg:flex lg:flex-col lg:justify-between lg:p-12">
         <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: "repeating-linear-gradient(135deg,#fff 0 1px,transparent 1px 22px)" }} />
         <div className="relative">
+          <img src="/hydro_logo_negative.png" alt="Hydro" data-testid="login-hydro-logo-panel" className="mb-10 h-24 w-auto" />
           <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-[#BCC3CA]">Manutenção · PCM · Confiabilidade</div>
           <h1 className="mt-4 max-w-lg text-[44px] font-semibold leading-[1.05]">Component Life Cycle Control</h1>
           <p className="mt-4 max-w-md text-[15px] leading-relaxed text-[#D2D7DC]">
@@ -40,7 +41,10 @@ export default function Login() {
       </section>
       <section className="flex items-center justify-center bg-mist px-6 py-12">
         <div className="w-full max-w-sm animate-rise">
-          <div className="mb-8 font-mono text-[11px] uppercase tracking-[0.2em] text-steel lg:hidden">Component Life Cycle Control</div>
+          <div className="mb-8 flex items-center gap-3 lg:hidden">
+            <img src="/hydro_logo_blue.png" alt="Hydro" data-testid="login-hydro-logo" className="h-16 w-auto" />
+            <span className="border-l border-line pl-3 font-mono text-[11px] uppercase tracking-[0.2em] text-steel">Component Life<br />Cycle Control</span>
+          </div>
           <h2 className="text-[26px] font-semibold text-ink">Acesso ao sistema</h2>
           <p className="mt-1 text-sm text-steel">Escolha como deseja entrar.</p>
 

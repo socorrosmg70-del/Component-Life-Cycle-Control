@@ -43,8 +43,8 @@ function Nav({ onNavigate }: { onNavigate?: () => void }) {
 function Brand() {
   return (
     <div className="flex items-center gap-3 px-6 pb-6 pt-6">
-      <div className="grid size-9 place-items-center rounded-md border border-white/25 bg-white/10 font-heading text-lg font-bold text-white">C</div>
-      <div className="leading-tight">
+      <img src="/hydro_logo_negative.png" alt="Hydro" data-testid="sidebar-hydro-logo" className="h-12 w-auto shrink-0" />
+      <div className="border-l border-white/25 pl-3 leading-tight">
         <div className="font-heading text-[15px] font-semibold text-white">Component Life</div>
         <div className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-[#BCC3CA]">Cycle Control</div>
       </div>
